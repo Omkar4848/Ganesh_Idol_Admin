@@ -16,7 +16,7 @@ const LandingPage = () => {
               Discover the Rich Culture and Heritage of Lord Ganesh
             </p>
             <Link
-              href="#explore"
+              to={"/"}
               className="mt-6 inline-block px-6 py-3 bg-orange-500 text-white rounded-lg"
             >
               Explore Now

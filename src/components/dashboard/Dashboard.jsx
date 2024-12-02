@@ -1,10 +1,13 @@
 import React from "react";
 import Sidebar from "./Sidebar/Sidebar";
+import ProductForm from "./Sidebar/AddIdol";
+import "./dashboard.css";
 
 const Dashboard = () => {
   return (
-    <div>
-      <Sidebar></Sidebar>
+    <div className="dashboard_div">
+      <Sidebar/>
+      <ProductForm/>
     </div>
   );
 };
