@@ -8,23 +8,28 @@ import Login from "./components/authentication/Login";
 import SignUp from "./components/authentication/SignUp";
 import ForgotPassword from "./components/authentication/ForgotPassword";
 import LandingPage from "./components/Home/Home.jsx";
-
+import { AuthProvider } from "./components/AuthContext/AuthContext.jsx";
+import { IdolProvider } from "./components/AuthContext/IdolContext.jsx";
 function App() {
   return (
     <Router>
-      <>
-        <Navbar />
-        <div className="w-full">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/Dashboard/*" element={<Dashboard />} />
-            <Route path="/Login" element={<Login />} />
-            <Route path="/SignUp" element={<SignUp />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
-          </Routes>
-          <Footer />
-        </div>
-      </>
+      <AuthProvider>
+        <IdolProvider>
+          <Navbar />
+          <div className="w-full">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/Dashboard/*" element={<Dashboard />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/SignUp" element={<SignUp />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
+              
+            </Routes>
+
+            <Footer />
+          </div>
+        </IdolProvider>
+      </AuthProvider>
     </Router>
   );
 }

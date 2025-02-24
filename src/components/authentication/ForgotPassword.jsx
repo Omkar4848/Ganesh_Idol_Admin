@@ -2,13 +2,91 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+ 
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [signUpData, setSignUpData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+   
+     
+    const [errors, setErrors] = useState({});
+  
+    const handleChange = (event) => {
+      const { name, value } = event.target;
+      setSignUpData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    };
+  
+    function validate() {
+      let emailError = "";
+      let passwordError = "";
+      let confirmPasswordError = "";
+  
+      const emailRegex = /\S+@\S+\.\S+/;
+  
+      if (!signUpData.email || !emailRegex.test(signUpData.email)) {
+        emailError = "Please enter a valid email address.";
+      }
+      if (!signUpData.password || signUpData.password.length < 6) {
+        passwordError = "Password must be at least 6 characters long.";
+      }
+      if (signUpData.password !== signUpData.confirmPassword) {
+        confirmPasswordError = "Passwords do not match.";
+      }
+  
+      if (emailError || passwordError || confirmPasswordError) {
+        setErrors({
+          email: emailError,
+          password: passwordError,
+          confirmPassword: confirmPasswordError,
+        });
+        return false;
+      }
+  
+      return true;
+    }
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+  
+      if (!validate()) return;
+      setLoading(true);
+  
+      const { email, password } = signUpData;
+      const payload = { email, password };
+  
+      try {
+        console.log("Request payload:", payload);
+        const response = await axios.put(
+          `${apiUrl}/api/users/login/resetPassword`,
+          payload
+        );
+  
+        console.log("Server response:", response);
+        if (response.status === 200) {
+          alert("Password updated successfully!");
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error("Error occurred:", err);
+        const errorMessage =
+          err.response?.data?.message || "Something went wrong. Please try again.";
+        alert(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
 
-    setIsSubmitted(true);
   };
 
   return (
@@ -38,7 +116,7 @@ const ForgotPassword = () => {
                 id="email"
                 name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleChange}
                 required
                 className="mt-1 px-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your email"
